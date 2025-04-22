@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronómetros 15 Minutos</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        button {
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        .timer {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .started-time {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .remove-button {
+            margin-top: 10px;
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+
+    <button onclick="addTimer()">Agregar cronómetro</button>
+    <div id="timersContainer"></div>
+
+    <script>
+        let timerCount = 0;
+
+        function addTimer() {
+            timerCount++;
+            const timerDiv = document.createElement("div");
+            timerDiv.className = "timer";
+
+            const now = new Date();
+            const startTime = now.getHours().toString().padStart(2, '0') + ":" + 
+                              now.getMinutes().toString().padStart(2, '0');
+
+            const timerLabel = document.createElement("div");
+            timerLabel.innerHTML = "<strong>#"+ timerCount +"</strong>";
+
+            const startedAt = document.createElement("div");
+            startedAt.className = "started-time";
+            startedAt.innerText = "Iniciado a las " + startTime;
+
+            const countdown = document.createElement("div");
+            countdown.innerText = "15:00";
+
+            let totalSeconds = 15 * 60;
+            const interval = setInterval(() => {
+                totalSeconds--;
+                const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+                const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+                countdown.innerText = `${minutes}:${seconds}`;
+
+                if (totalSeconds <= 0) {
+                    clearInterval(interval);
+                    timerDiv.style.backgroundColor = "#ffcccc";
+                }
+            }, 1000);
+
+            const removeButton = document.createElement("button");
+            removeButton.className = "remove-button";
+            removeButton.innerText = "Eliminar";
+            removeButton.onclick = () => {
+                clearInterval(interval);
+                timerDiv.remove();
+            };
+
+            timerDiv.appendChild(timerLabel);
+            timerDiv.appendChild(startedAt);
+            timerDiv.appendChild(countdown);
+            timerDiv.appendChild(removeButton);
+
+            document.getElementById("timersContainer").appendChild(timerDiv);
+        }
+    </script>
+</body>
+</html>
